@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using BuildingYourFirstMobileGame.Game2D;
 #endregion
 
 namespace BuildingYourFirstMobileGame
@@ -22,6 +23,8 @@ namespace BuildingYourFirstMobileGame
         RenderContext _renderContext;
         Model _hero;
         Matrix _view, _projection;
+
+        GameSprite _background;
 
         public Game1()
             : base()
@@ -61,6 +64,9 @@ namespace BuildingYourFirstMobileGame
             _renderContext.GraphicsDevice = graphics.GraphicsDevice;
 
             _hero = Content.Load<Model>("Game3D/Vampire");
+
+            _background = new GameSprite("Game2D/Background");
+            _background.LoadContent(Content);
         }
 
         /// <summary>
@@ -97,6 +103,14 @@ namespace BuildingYourFirstMobileGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            _background.Draw(_renderContext);
+            spriteBatch.End();
+
+            graphics.GraphicsDevice.BlendState = BlendState.Opaque;
+            graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            graphics.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+
             var transforms = new Matrix[_hero.Bones.Count];
             _hero.CopyAbsoluteBoneTransformsTo(transforms);
 
