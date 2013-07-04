@@ -19,7 +19,8 @@ namespace BuildingYourFirstMobileGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Texture2D _background, _enemy, _hero;
+        GameSprite _background, _enemy, _hero;
+        RenderContext _renderContext;
 
         public Game1()
             : base()
@@ -37,6 +38,14 @@ namespace BuildingYourFirstMobileGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _renderContext = new RenderContext();
+
+            _background = new GameSprite("Game2D/Background");
+            _enemy = new GameSprite("Game2D/Enemy");
+            _hero = new GameSprite("Game2D/Hero");
+
+            _enemy.Position = new Vector2(10, 10);
+            _hero.Position = new Vector2(10, 348);
 
             base.Initialize();
         }
@@ -51,9 +60,12 @@ namespace BuildingYourFirstMobileGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            _background = Content.Load<Texture2D>("Game2D/Background");
-            _enemy = Content.Load<Texture2D>("Game2D/Enemy");
-            _hero = Content.Load<Texture2D>("Game2D/Hero");
+            _renderContext.SpriteBatch = spriteBatch;
+            _renderContext.GraphicsDevice = graphics.GraphicsDevice;
+
+            _background.LoadContent(Content);
+            _enemy.LoadContent(Content);
+            _hero.LoadContent(Content);
         }
 
         /// <summary>
@@ -76,6 +88,9 @@ namespace BuildingYourFirstMobileGame
                 Exit();
 
             // TODO: Add your update logic here
+            _renderContext.GameTime = gameTime;
+            _enemy.Update(_renderContext);
+            _hero.Update(_renderContext);
 
             base.Update(gameTime);
         }
@@ -90,9 +105,9 @@ namespace BuildingYourFirstMobileGame
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            spriteBatch.Draw(_background, new Vector2(0, 0), Color.White);
-            spriteBatch.Draw(_enemy, new Vector2(10, 10), Color.White);
-            spriteBatch.Draw(_hero, new Vector2(10, 348), Color.White);
+            _background.Draw(_renderContext);
+            _enemy.Draw(_renderContext);
+            _hero.Draw(_renderContext);
             spriteBatch.End();
 
             base.Draw(gameTime);
