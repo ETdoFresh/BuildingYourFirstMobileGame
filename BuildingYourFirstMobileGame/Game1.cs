@@ -19,10 +19,9 @@ namespace BuildingYourFirstMobileGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        GameSprite _background;
-        Hero2D _hero;
-        Enemy2D _enemy;
         RenderContext _renderContext;
+        Model _hero;
+        Matrix _view, _projection;
 
         public Game1()
             : base()
@@ -42,13 +41,8 @@ namespace BuildingYourFirstMobileGame
             // TODO: Add your initialization logic here
             _renderContext = new RenderContext();
 
-            _background = new GameSprite("Game2D/Background");
-            _enemy = new Enemy2D();
-            _enemy.Initialize();
-            _hero = new Hero2D();
-            _hero.Initialize();
-
-            _enemy.Position = new Vector2(10, 10);
+            _view = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
+            _projection = Matrix.CreateOrthographic(800, 480, 0.1f, 300);
 
             base.Initialize();
         }
@@ -66,9 +60,7 @@ namespace BuildingYourFirstMobileGame
             _renderContext.SpriteBatch = spriteBatch;
             _renderContext.GraphicsDevice = graphics.GraphicsDevice;
 
-            _background.LoadContent(Content);
-            _enemy.LoadContent(Content);
-            _hero.LoadContent(Content);
+            _hero = Content.Load<Model>("Game3D/Vampire");
         }
 
         /// <summary>
@@ -92,8 +84,6 @@ namespace BuildingYourFirstMobileGame
 
             // TODO: Add your update logic here
             _renderContext.GameTime = gameTime;
-            _enemy.Update(_renderContext);
-            _hero.Update(_renderContext);
 
             base.Update(gameTime);
         }
@@ -107,11 +97,22 @@ namespace BuildingYourFirstMobileGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
-            _background.Draw(_renderContext);
-            _enemy.Draw(_renderContext);
-            _hero.Draw(_renderContext);
-            spriteBatch.End();
+            var transforms = new Matrix[_hero.Bones.Count];
+            _hero.CopyAbsoluteBoneTransformsTo(transforms);
+
+            foreach (ModelMesh mesh in _hero.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+
+                    effect.View = _view;
+                    effect.Projection = _projection;
+                    effect.World = transforms[mesh.ParentBone.Index];
+                }
+
+                mesh.Draw();
+            }
 
             base.Draw(gameTime);
         }
