@@ -62,8 +62,12 @@
     </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Content\" />
+    <ProjectReference Include="..\MonoGame\MonoGame\MonoGame.csproj">
+      <Project>{bdec86d6-b5df-419b-958d-197b684a0978}</Project>
+      <Name>MonoGame</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,2 +1,6 @@
 BuildingYourFirstMobileGame/bin/
 BuildingYourFirstMobileGame/obj/
+MonoGame/MonoGame/bin/
+MonoGame/MonoGame/obj/
+
+*.cache*

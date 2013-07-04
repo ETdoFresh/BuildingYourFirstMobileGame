@@ -19,6 +19,8 @@ namespace BuildingYourFirstMobileGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Texture2D _background, _enemy, _hero;
+
         public Game1()
             : base()
         {
@@ -49,6 +51,9 @@ namespace BuildingYourFirstMobileGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            _background = Content.Load<Texture2D>("Game2D/Background");
+            _enemy = Content.Load<Texture2D>("Game2D/Enemy");
+            _hero = Content.Load<Texture2D>("Game2D/Hero");
         }
 
         /// <summary>
@@ -84,6 +89,11 @@ namespace BuildingYourFirstMobileGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            spriteBatch.Draw(_background, new Vector2(0, 0), Color.White);
+            spriteBatch.Draw(_enemy, new Vector2(10, 10), Color.White);
+            spriteBatch.Draw(_hero, new Vector2(10, 348), Color.White);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
