@@ -22,7 +22,7 @@ namespace BuildingYourFirstMobileGame
         SpriteBatch spriteBatch;
 
         RenderContext _renderContext;
-        GameModel _hero;
+        Hero3D _hero;
         Camera _camera;
 
         GameSprite _background;
@@ -49,8 +49,8 @@ namespace BuildingYourFirstMobileGame
             _camera.Position = new Vector3(0, 0, 20);
             _renderContext.Camera = _camera;
 
-            _hero = new GameModel("Game3D/Vampire");
-            _hero.Position = new Vector3(0, -147, -100);
+            _hero = new Hero3D();
+            _hero.Initialize();
 
             _background = new GameSprite("Game2D/Background");
 
