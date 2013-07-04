@@ -10,15 +10,17 @@ namespace BuildingYourFirstMobileGame
 {
     class Hero2D : GameObject2D
     {
-        private GameSprite _heroSprite;
+        private GameAnimatedSprite _heroSprite;
+        private const int FrameWidth = 32;
         private int _direction = 1; // Right = 1 | Left = -1
         private const int Speed = 60; // px per sec
 
         public override void Initialize()
         {
             base.Initialize();
-            _heroSprite = new GameSprite("Game2D/Hero");
+            _heroSprite = new GameAnimatedSprite("Game2D/Hero_Spritesheet", 8, 80, new Point(32, 39));
             _heroSprite.Position = new Vector2(10, 348);
+            _heroSprite.PlayAnimation(true);
         }
 
         public override void LoadContent(ContentManager contentManager)
@@ -30,9 +32,12 @@ namespace BuildingYourFirstMobileGame
         public override void Update(RenderContext renderContext)
         {
             base.Update(renderContext);
+
+            _heroSprite.Update(renderContext);
+
             var heroPos = _heroSprite.Position;
 
-            if (_direction == 1 && heroPos.X >= renderContext.GraphicsDevice.Viewport.Width - (_heroSprite.Width * _heroSprite.Scale.X))
+            if (_direction == 1 && heroPos.X >= renderContext.GraphicsDevice.Viewport.Width - (FrameWidth * _heroSprite.Scale.X))
             {
                 _direction = -1;
                 _heroSprite.Effect = SpriteEffects.FlipHorizontally;
