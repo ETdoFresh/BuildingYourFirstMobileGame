@@ -19,8 +19,9 @@ namespace BuildingYourFirstMobileGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        GameSprite _background, _enemy;
+        GameSprite _background;
         Hero2D _hero;
+        Enemy2D _enemy;
         RenderContext _renderContext;
 
         public Game1()
@@ -42,7 +43,8 @@ namespace BuildingYourFirstMobileGame
             _renderContext = new RenderContext();
 
             _background = new GameSprite("Game2D/Background");
-            _enemy = new GameSprite("Game2D/Enemy");
+            _enemy = new Enemy2D();
+            _enemy.Initialize();
             _hero = new Hero2D();
             _hero.Initialize();
 
