@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
 using BuildingYourFirstMobileGame.Game2D;
+using BuildingYourFirstMobileGame.Game3D;
 #endregion
 
 namespace BuildingYourFirstMobileGame
@@ -21,8 +22,8 @@ namespace BuildingYourFirstMobileGame
         SpriteBatch spriteBatch;
 
         RenderContext _renderContext;
-        Model _hero;
-        Matrix _view, _projection;
+        GameModel _hero;
+        Camera _camera;
 
         GameSprite _background;
 
@@ -44,8 +45,14 @@ namespace BuildingYourFirstMobileGame
             // TODO: Add your initialization logic here
             _renderContext = new RenderContext();
 
-            _view = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
-            _projection = Matrix.CreateOrthographic(800, 480, 0.1f, 300);
+            _camera = new Camera();
+            _camera.Position = new Vector3(0, 0, 20);
+            _renderContext.Camera = _camera;
+
+            _hero = new GameModel("Game3D/Vampire");
+            _hero.Position = new Vector3(0, -147, -100);
+
+            _background = new GameSprite("Game2D/Background");
 
             base.Initialize();
         }
@@ -63,9 +70,7 @@ namespace BuildingYourFirstMobileGame
             _renderContext.SpriteBatch = spriteBatch;
             _renderContext.GraphicsDevice = graphics.GraphicsDevice;
 
-            _hero = Content.Load<Model>("Game3D/Vampire");
-
-            _background = new GameSprite("Game2D/Background");
+            _hero.LoadContent(Content);
             _background.LoadContent(Content);
         }
 
@@ -90,6 +95,8 @@ namespace BuildingYourFirstMobileGame
 
             // TODO: Add your update logic here
             _renderContext.GameTime = gameTime;
+            _camera.Update(_renderContext);
+            _hero.Update(_renderContext);
 
             base.Update(gameTime);
         }
@@ -111,22 +118,7 @@ namespace BuildingYourFirstMobileGame
             graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             graphics.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
-            var transforms = new Matrix[_hero.Bones.Count];
-            _hero.CopyAbsoluteBoneTransformsTo(transforms);
-
-            foreach (ModelMesh mesh in _hero.Meshes)
-            {
-                foreach (BasicEffect effect in mesh.Effects)
-                {
-                    effect.EnableDefaultLighting();
-
-                    effect.View = _view;
-                    effect.Projection = _projection;
-                    effect.World = transforms[mesh.ParentBone.Index];
-                }
-
-                mesh.Draw();
-            }
+            _hero.Draw(_renderContext);
 
             base.Draw(gameTime);
         }
