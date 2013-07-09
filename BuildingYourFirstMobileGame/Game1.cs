@@ -23,6 +23,7 @@ namespace BuildingYourFirstMobileGame
 
         RenderContext _renderContext;
         Hero3D _hero;
+        Enemy3D _enemy;
         Camera _camera;
 
         GameSprite _background;
@@ -52,6 +53,9 @@ namespace BuildingYourFirstMobileGame
             _hero = new Hero3D();
             _hero.Initialize();
 
+            _enemy = new Enemy3D();
+            _enemy.Initialize();
+
             _background = new GameSprite("Game2D/Background");
 
             base.Initialize();
@@ -71,6 +75,7 @@ namespace BuildingYourFirstMobileGame
             _renderContext.GraphicsDevice = graphics.GraphicsDevice;
 
             _hero.LoadContent(Content);
+            _enemy.LoadContent(Content);
             _background.LoadContent(Content);
         }
 
@@ -97,6 +102,7 @@ namespace BuildingYourFirstMobileGame
             _renderContext.GameTime = gameTime;
             _camera.Update(_renderContext);
             _hero.Update(_renderContext);
+            _enemy.Update(_renderContext);
 
             base.Update(gameTime);
         }
@@ -119,6 +125,7 @@ namespace BuildingYourFirstMobileGame
             graphics.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
             _hero.Draw(_renderContext);
+            _enemy.Draw(_renderContext);
 
             base.Draw(gameTime);
         }

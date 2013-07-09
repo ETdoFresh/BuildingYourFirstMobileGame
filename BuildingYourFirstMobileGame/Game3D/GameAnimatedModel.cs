@@ -18,6 +18,8 @@ namespace BuildingYourFirstMobileGame.Game3D
         private SkinningData _skinningData;
         private float _speedScale = 1f;
 
+        public event Action<string> AnimationComplete;
+
         public GameAnimatedModel(string assetFile)
         {
             _assetFile = assetFile;
@@ -35,6 +37,7 @@ namespace BuildingYourFirstMobileGame.Game3D
 
             _animationPlayer = new AnimationPlayer(_skinningData);
             _animationPlayer.SetAnimationSpeed(_speedScale);
+            _animationPlayer.AnimationComplete += s => { if (AnimationComplete != null) AnimationComplete(s); };
         }
 
         public override void Update(RenderContext renderContext)
@@ -84,10 +87,15 @@ namespace BuildingYourFirstMobileGame.Game3D
 
         public void PlayAnimation(string clipName)
         {
+            PlayAnimation(clipName, true);
+        }
+
+        public void PlayAnimation(string clipName, bool loopAnimation)
+        {
             System.Diagnostics.Debug.Assert(_skinningData.AnimationClips.ContainsKey(clipName), string.Format("This model contains no animation with the name {0}", clipName));
 
             var clip = _skinningData.AnimationClips[clipName];
-            _animationPlayer.StartClip(clip);
+            _animationPlayer.StartClip(clip, loopAnimation);
         }
 
         public void SetAnimationSpeed(float speedScale)

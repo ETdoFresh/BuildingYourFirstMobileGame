@@ -88,7 +88,7 @@
     <Compile Include="Game3D\Enemy.x">
       <Name>Enemy</Name>
       <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>SkinnedModelProcessor</Processor>
     </Compile>
     <Compile Include="Game3D\Rock.FBX">
       <Name>Rock</Name>
