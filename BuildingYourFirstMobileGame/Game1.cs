@@ -7,8 +7,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
-using BuildingYourFirstMobileGame.Game2D;
-using BuildingYourFirstMobileGame.Game3D;
+using BuildingYourFirstMobileGame.Game.Game3D;
+using BuildingYourFirstMobileGame.Engine.Helpers;
+using BuildingYourFirstMobileGame.Engine.Objects;
+using BuildingYourFirstMobileGame.Game.Game2D;
 #endregion
 
 namespace BuildingYourFirstMobileGame
@@ -16,15 +18,15 @@ namespace BuildingYourFirstMobileGame
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Game
+    public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
         RenderContext _renderContext;
-        Hero3D _hero;
-        Enemy3D _enemy;
-        Camera _camera;
+        Hero2D _hero;
+        Enemy2D _enemy;
+        BaseCamera _camera;
 
         GameSprite _background;
 
@@ -46,14 +48,14 @@ namespace BuildingYourFirstMobileGame
             // TODO: Add your initialization logic here
             _renderContext = new RenderContext();
 
-            _camera = new Camera();
-            _camera.Position = new Vector3(0, 0, 20);
+            _camera = new BaseCamera();
+            _camera.LocalPosition = new Vector3(0, 0, 20);
             _renderContext.Camera = _camera;
 
-            _hero = new Hero3D();
+            _hero = new Hero2D();
             _hero.Initialize();
 
-            _enemy = new Enemy3D();
+            _enemy = new Enemy2D();
             _enemy.Initialize();
 
             _background = new GameSprite("Game2D/Background");
@@ -118,14 +120,13 @@ namespace BuildingYourFirstMobileGame
             // TODO: Add your drawing code here
             spriteBatch.Begin();
             _background.Draw(_renderContext);
+            _hero.Draw(_renderContext);
+            _enemy.Draw(_renderContext);
             spriteBatch.End();
 
             graphics.GraphicsDevice.BlendState = BlendState.Opaque;
             graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             graphics.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
-
-            _hero.Draw(_renderContext);
-            _enemy.Draw(_renderContext);
 
             base.Draw(gameTime);
         }

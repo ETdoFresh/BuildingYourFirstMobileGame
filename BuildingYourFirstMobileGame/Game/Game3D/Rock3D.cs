@@ -5,9 +5,10 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using BuildingYourFirstMobileGame.Game2D;
+using BuildingYourFirstMobileGame.Engine.SceneGraph;
+using BuildingYourFirstMobileGame.Engine.Objects;
 
-namespace BuildingYourFirstMobileGame.Game3D
+namespace BuildingYourFirstMobileGame.Game.Game3D
 {
     class Rock3D : GameObject3D
     {
@@ -23,20 +24,15 @@ namespace BuildingYourFirstMobileGame.Game3D
         private const int ScaleFactor = 2;
 
         public bool CanDrop { get; private set; }
-        public override Vector3 Position
-        {
-            get { return _rockModel.Position; }
-            set { _rockModel.Position = value; }
-        }
 
         public override void Initialize()
         {
             _rockModel = new GameModel("Game3D/Rock");
-            _rockModel.Initialize();
+            AddChild(_rockModel);
 
             _explosionSprite = new GameAnimatedSprite("Game2D/Explosion_Spritesheet", 16, 50, new Point(FrameSize, FrameSize), 4);
             _explosionSprite.CanDraw = false;
-            _explosionSprite.Scale = new Vector2(ScaleFactor, ScaleFactor);
+            _explosionSprite.Scale(new Vector2(ScaleFactor, ScaleFactor));
             CanDrop = true;
             _explosionSprite.Initialize();
 
@@ -51,8 +47,6 @@ namespace BuildingYourFirstMobileGame.Game3D
         public override void LoadContent(ContentManager contentManager)
         {
             _explosionSprite.LoadContent(contentManager);
-            _rockModel.LoadContent(contentManager);
-
             base.LoadContent(contentManager);
         }
 
@@ -68,8 +62,8 @@ namespace BuildingYourFirstMobileGame.Game3D
 
         public override void Update(RenderContext renderContext)
         {
-            _rockModel.Update(renderContext);
             _explosionSprite.Update(renderContext);
+            base.Update(renderContext);
 
             if (CanDrop) return;
 
@@ -78,19 +72,20 @@ namespace BuildingYourFirstMobileGame.Game3D
                 var deltaTime = (float)renderContext.GameTime.ElapsedGameTime.TotalSeconds;
                 _currentSpeed += Gravity * deltaTime;
 
-                var rockPos = _rockModel.Position;
+                var rockPos = LocalPosition;
                 rockPos.Y -= _currentSpeed * deltaTime;
-                _rockModel.Position = rockPos;
+                Translate(rockPos);
 
                 if (rockPos.Y <= -140)
                 {
                     IsFalling = false;
 
                     _explosionSprite.CanDraw = true;
+                    _rockModel.CanDraw = false;
 
                     var projVec = renderContext.GraphicsDevice.Viewport.Project(rockPos, renderContext.Camera.Projection, renderContext.Camera.View, Matrix.Identity);
 
-                    _explosionSprite.Position = new Vector2(projVec.X - FrameSize, projVec.Y + -FrameSize);
+                    _explosionSprite.Translate(new Vector2(projVec.X - FrameSize, projVec.Y + -FrameSize));
                     _explosionSprite.PlayAnimation();
                 }
             }
@@ -98,19 +93,16 @@ namespace BuildingYourFirstMobileGame.Game3D
             {
                 if (!_explosionSprite.IsPlaying)
                 {
+                    _rockModel.CanDraw = true;
                     _explosionSprite.CanDraw = false;
                     CanDrop = true;
                 }
             }
-
-            base.Update(renderContext);
         }
 
         public override void Draw(RenderContext renderContext)
         {
-            if (CanDrop || IsFalling)
-                _rockModel.Draw(renderContext);
-            else
+            if (!(CanDrop || IsFalling))
             {
                 renderContext.SpriteBatch.Begin();
                 _explosionSprite.Draw(renderContext);
@@ -119,7 +111,7 @@ namespace BuildingYourFirstMobileGame.Game3D
                 //Reset Renderstate
                 renderContext.GraphicsDevice.BlendState = BlendState.Opaque;
                 renderContext.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-                renderContext.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap; 
+                renderContext.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
             }
 
             base.Draw(renderContext);

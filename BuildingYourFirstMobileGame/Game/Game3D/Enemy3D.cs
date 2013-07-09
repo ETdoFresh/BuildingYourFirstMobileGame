@@ -5,8 +5,10 @@ using System.Text;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using BuildingYourFirstMobileGame.Engine.SceneGraph;
+using BuildingYourFirstMobileGame.Engine.Objects;
 
-namespace BuildingYourFirstMobileGame.Game3D
+namespace BuildingYourFirstMobileGame.Game.Game3D
 {
     class Enemy3D : GameObject3D
     {
@@ -33,7 +35,7 @@ namespace BuildingYourFirstMobileGame.Game3D
             base.Initialize();
 
             _enemyModel = new GameAnimatedModel("Game3D/Enemy");
-            _enemyModel.Initialize();
+            AddChild(_enemyModel);
             _enemyModel.AnimationComplete += EnemyAnimationComplete;
 
             _rock = new Rock3D();
@@ -57,31 +59,28 @@ namespace BuildingYourFirstMobileGame.Game3D
         {
             base.LoadContent(contentManager);
 
-            _enemyModel.LoadContent(contentManager);
             _enemyModel.PlayAnimation("Fly");
             _rock.LoadContent(contentManager);
 
-            _enemyModel.Position = new Vector3(-480, 150, -100);
+            Translate(new Vector3(-480, 150, -100));
         }
 
         public override void Update(RenderContext renderContext)
         {
             base.Update(renderContext);
 
-            _enemyModel.Update(renderContext);
+            _totalAppearTime += renderContext.GameTime.ElapsedGameTime.Milliseconds;
 
             _rock.Update(renderContext);
 
-            _totalAppearTime += renderContext.GameTime.ElapsedGameTime.Milliseconds;
-
             if (_totalAppearTime >= _appearDelay)
             {
-                var enemyPos = _enemyModel.Position;
+                var enemyPos = LocalPosition;
                 enemyPos.X +=
                     (float)((Speed) * renderContext.GameTime.ElapsedGameTime.TotalSeconds) *
                     _direction;
 
-                _enemyModel.Position = enemyPos;
+                Translate(enemyPos);
 
                 var projVec = renderContext.GraphicsDevice.Viewport.Project(enemyPos, renderContext.Camera.Projection, renderContext.Camera.View, Matrix.Identity);
 
@@ -102,7 +101,7 @@ namespace BuildingYourFirstMobileGame.Game3D
                         _rock.Drop();
 
                         _enemyModel.SetAnimationSpeed(0.6f);
-                        _enemyModel.PlayAnimation("Drop",false);
+                        _enemyModel.PlayAnimation("Drop", false);
                         _totalDropTime = 0;
                         _dropDelay = _rand.Next(MinDropDelay, MaxDropDelay);
                     }
@@ -110,12 +109,11 @@ namespace BuildingYourFirstMobileGame.Game3D
             }
 
             if (!_rock.IsFalling || _rock.CanDrop)
-                _rock.Position = _enemyModel.GetBoneTransform("Rock_Position").Translation;
+                _rock.Translate(_enemyModel.GetBoneTransform("Rock_Position").Translation);
         }
 
         public override void Draw(RenderContext renderContext)
         {
-            _enemyModel.Draw(renderContext);
             _rock.Draw(renderContext);
 
             base.Draw(renderContext);

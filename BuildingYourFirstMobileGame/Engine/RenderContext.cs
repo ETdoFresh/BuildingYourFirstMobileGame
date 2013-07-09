@@ -1,4 +1,4 @@
-﻿using BuildingYourFirstMobileGame.Game3D;
+﻿using BuildingYourFirstMobileGame.Engine.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,6 +13,6 @@ namespace BuildingYourFirstMobileGame
         public SpriteBatch SpriteBatch { get; set; }
         public GraphicsDevice GraphicsDevice { get; set; }
         public GameTime GameTime { get; set; }
-        public Camera Camera { get; set; }
+        public BaseCamera Camera { get; set; }
     }
 }

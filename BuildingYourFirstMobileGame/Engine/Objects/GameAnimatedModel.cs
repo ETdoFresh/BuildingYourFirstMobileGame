@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using BuildingYourFirstMobileGame.Engine.SceneGraph;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SkinnedModelData;
@@ -7,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BuildingYourFirstMobileGame.Game3D
+namespace BuildingYourFirstMobileGame.Engine.Objects
 {
     class GameAnimatedModel : GameObject3D
     {

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using BuildingYourFirstMobileGame.Engine.SceneGraph;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -6,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BuildingYourFirstMobileGame.Game2D
+namespace BuildingYourFirstMobileGame.Engine.Objects
 {
     class GameSprite : GameObject2D
     {
@@ -38,8 +39,8 @@ namespace BuildingYourFirstMobileGame.Game2D
         {
             if (CanDraw)
             {
-                renderContext.SpriteBatch.Draw(_texture, Position, DrawRect, Color,
-                    MathHelper.ToRadians(Rotation), Vector2.Zero, Scale, Effect, Depth);
+                renderContext.SpriteBatch.Draw(_texture, WorldPosition, DrawRect, Color,
+                    MathHelper.ToRadians(WorldRotation), Vector2.Zero, WorldScale, Effect, Depth);
                 base.Draw(renderContext);
             }
         }

@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using BuildingYourFirstMobileGame.Engine.Objects;
+using BuildingYourFirstMobileGame.Engine.SceneGraph;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -6,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BuildingYourFirstMobileGame.Game2D
+namespace BuildingYourFirstMobileGame.Game.Game2D
 {
     class Enemy2D : GameObject2D
     {
@@ -37,10 +39,10 @@ namespace BuildingYourFirstMobileGame.Game2D
             base.Initialize();
 
             _enemySprite = new GameSprite("Game2D/Enemy");
-            _enemySprite.Initialize();
+            AddChild(_enemySprite);
 
             _enemyWithoutRockSprite = new GameSprite("Game2D/Enemy_NoRock");
-            _enemyWithoutRockSprite.Initialize();
+            AddChild(_enemyWithoutRockSprite);
             _enemyWithoutRockSprite.CanDraw = false;
 
             _rock = new Rock2D();
@@ -56,22 +58,14 @@ namespace BuildingYourFirstMobileGame.Game2D
         {
             base.LoadContent(contentManager);
 
-            _enemySprite.LoadContent(contentManager);
-            _enemyWithoutRockSprite.LoadContent(contentManager);
-            _rock.LoadContent(contentManager);
-
             // In LoadContent because we have to know the width of the enemy sprite
-            _enemySprite.Position = new Vector2(-_enemySprite.Width, 20);
+            _enemySprite.Translate(-_enemySprite.Width, 20);
+            _rock.LoadContent(contentManager);
         }
 
         public override void Update(RenderContext renderContext)
         {
             base.Update(renderContext);
-
-            _enemySprite.Update(renderContext);
-            _enemyWithoutRockSprite.Update(renderContext);
-
-            _rock.Update(renderContext);
 
             _totalAppearTime += renderContext.GameTime.ElapsedGameTime.Milliseconds;
 
@@ -81,13 +75,13 @@ namespace BuildingYourFirstMobileGame.Game2D
                 _totalWobbleSpeed %= (float)Math.PI * 2.0f;
 
                 var wobbleOffset = (float)Math.Sin(_totalWobbleSpeed);
-                var zeppelinPos = _enemySprite.Position;
+                var zeppelinPos = _enemySprite.LocalPosition;
                 zeppelinPos.X +=
                     (float)((Speed) * renderContext.GameTime.ElapsedGameTime.TotalSeconds) *
                     _direction;
                 zeppelinPos.Y += wobbleOffset * 2.0f;
 
-                _enemySprite.Position = zeppelinPos;
+                _enemySprite.Translate(zeppelinPos);
 
                 if ((_direction == 1 && zeppelinPos.X >= renderContext.GraphicsDevice.Viewport.Width) ||
                     (_direction == -1 && zeppelinPos.X <= -212))
@@ -100,7 +94,7 @@ namespace BuildingYourFirstMobileGame.Game2D
                                                  : SpriteEffects.None;
                 }
 
-                _enemyWithoutRockSprite.Position = _enemySprite.Position;
+                _enemyWithoutRockSprite.Translate(_enemySprite.LocalPosition);
                 _enemyWithoutRockSprite.Effect = _enemySprite.Effect;
 
                 if (_rock.CanDrop)
@@ -123,13 +117,12 @@ namespace BuildingYourFirstMobileGame.Game2D
                     }
                 }
             }
+            _rock.Update(renderContext);
         }
 
         public override void Draw(RenderContext renderContext)
         {
             _rock.Draw(renderContext);
-            _enemySprite.Draw(renderContext);
-            _enemyWithoutRockSprite.Draw(renderContext);
 
             base.Draw(renderContext);
         }

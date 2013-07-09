@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BuildingYourFirstMobileGame.Game2D
+namespace BuildingYourFirstMobileGame.Engine.Objects
 {
     class GameAnimatedSprite : GameSprite
     {
