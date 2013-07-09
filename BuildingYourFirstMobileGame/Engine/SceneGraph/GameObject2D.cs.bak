@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BuildingYourFirstMobileGame.Engine.Helpers;
 
 namespace BuildingYourFirstMobileGame.Engine.SceneGraph
 {
@@ -186,9 +185,6 @@ namespace BuildingYourFirstMobileGame.Engine.SceneGraph
         {
             if (CanDraw)
                 Children.ForEach(child => { if (child.CanDraw) child.Draw(renderContext); });
-
-            if (CanDraw && DrawBoundingRect && BoundingRect.HasValue)
-                BoundingRect.Value.Draw(renderContext, Color.Red);
         }
     }
 }

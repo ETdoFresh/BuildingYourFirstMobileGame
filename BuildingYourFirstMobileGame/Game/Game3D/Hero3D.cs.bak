@@ -19,7 +19,6 @@ namespace BuildingYourFirstMobileGame.Game.Game3D
         public override void Initialize()
         {
             _hero = new GameAnimatedModel("Game3D/Vampire");
-            _hero.CreateBoundingBox(25, 50, 25, new Vector3(0, 25, 0));
             _hero.SetAnimationSpeed(_animationSpeedScale);
             AddChild(_hero);
             Translate(0, -147, -100);

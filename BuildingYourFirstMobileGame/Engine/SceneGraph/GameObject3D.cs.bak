@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BuildingYourFirstMobileGame.Engine.Helpers;
 
 namespace BuildingYourFirstMobileGame.Engine.SceneGraph
 {
@@ -22,25 +21,6 @@ namespace BuildingYourFirstMobileGame.Engine.SceneGraph
 
         public GameObject3D Parent { get; private set; }
         public List<GameObject3D> Children { get; private set; }
-
-        private BoundingBox? _relativeBoundingBox;
-        public BoundingBox? BoundingBox { get; protected set; }
-        private bool _drawBoundingBox;
-        public bool DrawBoundingBox
-        {
-            get
-            {
-                if (Parent != null)
-                    return Parent.DrawBoundingBox || _drawBoundingBox;
-
-                return _drawBoundingBox;
-            }
-            set
-            {
-                _drawBoundingBox = value;
-            }
-        }
-
         public GameObject3D this[int childIndex]
         {
             get
@@ -77,7 +57,6 @@ namespace BuildingYourFirstMobileGame.Engine.SceneGraph
         {
             if (!Children.Contains(child))
             {
-                child.Scene = Scene;
                 child.Parent = this;
                 Children.Add(child);
             }
@@ -87,7 +66,6 @@ namespace BuildingYourFirstMobileGame.Engine.SceneGraph
         {
             if (Children.Remove(child))
             {
-                child.Scene = null;
                 child.Parent = null;
             }
         }
@@ -120,36 +98,6 @@ namespace BuildingYourFirstMobileGame.Engine.SceneGraph
         public void Rotate(float pitch, float yaw, float roll)
         {
             LocalRotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(yaw), MathHelper.ToRadians(pitch), MathHelper.ToRadians(roll));
-        }
-
-
-        public void CreateBoundingBox(float width, float height, float depth, Vector3 offset)
-        {
-            var max = new Vector3(width / 2.0f, height / 2.0f, depth / 2.0f);
-            var min = -max;
-
-            _relativeBoundingBox = new BoundingBox(min + offset, max + offset);
-            BoundingBox = _relativeBoundingBox;
-        }
-
-        public void CreateBoundingBox(float width, float height, float depth)
-        {
-            CreateBoundingBox(width, height, depth, Vector3.Zero);
-        }
-
-        public bool HitTest(GameObject3D gameObj)
-        {
-            //Check Other_Object Itself
-            if (gameObj.BoundingBox.HasValue && BoundingBox.HasValue)
-            {
-                if (BoundingBox.Value.Intersects(gameObj.BoundingBox.Value)) return true;
-            }
-
-            //Check this_Object and other_Object's Children
-            if (gameObj.Children.FirstOrDefault(HitTest) != null) return true;
-
-            //Check this_Object's children with other_Object
-            return Children.FirstOrDefault(child => child.HitTest(gameObj)) != null;
         }
 
         public virtual void Initialize()
@@ -194,18 +142,12 @@ namespace BuildingYourFirstMobileGame.Engine.SceneGraph
 
             Children.ForEach(child => child.Update(renderContext));
 
-            if (_relativeBoundingBox.HasValue)
-                BoundingBox = _relativeBoundingBox.Value.Update(WorldMatrix);
         }
 
         public virtual void Draw(RenderContext renderContext)
         {
             if (CanDraw)
                 Children.ForEach(child => { if (child.CanDraw) child.Draw(renderContext); });
-            
-            if (CanDraw && DrawBoundingBox && BoundingBox.HasValue)
-                BoundingBox.Value.Draw(renderContext, Color.Red);
-       
         }
     }
 }

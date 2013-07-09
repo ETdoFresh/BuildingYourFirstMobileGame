@@ -45,8 +45,10 @@ namespace BuildingYourFirstMobileGame
 
             SceneManager.AddGameScene(new Game2D());
             SceneManager.AddGameScene(new Game3D());
+            SceneManager.AddGameScene(new GameCollision2D());
+            SceneManager.AddGameScene(new GameCollision3D());
 
-            SceneManager.SetActiveScene("Game3D");
+            SceneManager.SetActiveScene("GameCollision2D");
             SceneManager.Initialize();
 
             base.Initialize();
@@ -64,6 +66,7 @@ namespace BuildingYourFirstMobileGame
 
             // TODO: use this.Content to load your game content here
             SceneManager.LoadContent(Content);
+            Extensions.LoadContent(Content);
         }
 
         /// <summary>

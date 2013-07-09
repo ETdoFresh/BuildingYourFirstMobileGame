@@ -35,6 +35,7 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Engine\Helpers\Extensions.cs" />
     <Compile Include="Engine\SceneGraph\GameScene.cs" />
     <Compile Include="Engine\SceneGraph\SceneManager.cs" />
     <Compile Include="Game\Game2D\Enemy2D.cs" />
@@ -52,6 +53,8 @@
     <Compile Include="Game\Game3D\Rock3D.cs" />
     <Compile Include="Game\Scenes\Game2D.cs" />
     <Compile Include="Game\Scenes\Game3D.cs" />
+    <Compile Include="Game\Scenes\GameCollision2D.cs" />
+    <Compile Include="Game\Scenes\GameCollision3D.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\RenderContext.cs" />
