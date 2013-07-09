@@ -98,8 +98,14 @@
     <Compile Include="Game3D\Vampire.x">
       <Name>Vampire</Name>
       <Importer>XImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>SkinnedModelProcessor</Processor>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SkinnedModelPipeline\SkinnedModelPipeline.csproj">
+      <Project>{5c5ba7fd-e1a7-43c1-9d28-4f36a567203a}</Project>
+      <Name>SkinnedModelPipeline</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--

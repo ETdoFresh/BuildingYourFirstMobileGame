@@ -2,5 +2,13 @@ BuildingYourFirstMobileGame/bin/
 BuildingYourFirstMobileGame/obj/
 MonoGame/MonoGame/bin/
 MonoGame/MonoGame/obj/
+MonoGame/MonoGameContent/bin/
+MonoGame/MonoGameContent/obj/
+SkinnedModelData/bin/
+SkinnedModelData/obj/
+SkinnedModelDataMonoGameDLL/bin/
+SkinnedModelDataMonoGameDLL/obj/
+SkinnedModelPipeline/bin/
+SkinnedModelPipeline/obj/
 
 *.cache*
