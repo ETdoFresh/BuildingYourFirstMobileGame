@@ -33,6 +33,19 @@ namespace BuildingYourFirstMobileGame.Engine.SceneGraph
             }
         }
 
+        private GameScene _scene;
+        public GameScene Scene
+        {
+            get
+            {
+                if (_scene != null) return _scene;
+                if (Parent != null) return Parent.Scene;
+                return null;
+            }
+
+            set { _scene = value; }
+        }
+
         protected GameObject3D()
         {
             LocalScale = WorldScale = Vector3.One;

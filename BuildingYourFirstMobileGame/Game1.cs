@@ -11,6 +11,8 @@ using BuildingYourFirstMobileGame.Game.Game3D;
 using BuildingYourFirstMobileGame.Engine.Helpers;
 using BuildingYourFirstMobileGame.Engine.Objects;
 using BuildingYourFirstMobileGame.Game.Game2D;
+using BuildingYourFirstMobileGame.Engine.SceneGraph;
+using BuildingYourFirstMobileGame.Game.Scenes;
 #endregion
 
 namespace BuildingYourFirstMobileGame
@@ -22,13 +24,6 @@ namespace BuildingYourFirstMobileGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
-        RenderContext _renderContext;
-        Hero2D _hero;
-        Enemy2D _enemy;
-        BaseCamera _camera;
-
-        GameSprite _background;
 
         public Game1()
             : base()
@@ -46,19 +41,13 @@ namespace BuildingYourFirstMobileGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            _renderContext = new RenderContext();
+            SceneManager.RenderContext.GraphicsDevice = graphics.GraphicsDevice;
 
-            _camera = new BaseCamera();
-            _camera.LocalPosition = new Vector3(0, 0, 20);
-            _renderContext.Camera = _camera;
+            SceneManager.AddGameScene(new Game2D());
+            SceneManager.AddGameScene(new Game3D());
 
-            _hero = new Hero2D();
-            _hero.Initialize();
-
-            _enemy = new Enemy2D();
-            _enemy.Initialize();
-
-            _background = new GameSprite("Game2D/Background");
+            SceneManager.SetActiveScene("Game3D");
+            SceneManager.Initialize();
 
             base.Initialize();
         }
@@ -71,14 +60,10 @@ namespace BuildingYourFirstMobileGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            SceneManager.RenderContext.SpriteBatch = spriteBatch;
 
             // TODO: use this.Content to load your game content here
-            _renderContext.SpriteBatch = spriteBatch;
-            _renderContext.GraphicsDevice = graphics.GraphicsDevice;
-
-            _hero.LoadContent(Content);
-            _enemy.LoadContent(Content);
-            _background.LoadContent(Content);
+            SceneManager.LoadContent(Content);
         }
 
         /// <summary>
@@ -101,10 +86,7 @@ namespace BuildingYourFirstMobileGame
                 Exit();
 
             // TODO: Add your update logic here
-            _renderContext.GameTime = gameTime;
-            _camera.Update(_renderContext);
-            _hero.Update(_renderContext);
-            _enemy.Update(_renderContext);
+            SceneManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -118,15 +100,7 @@ namespace BuildingYourFirstMobileGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
-            _background.Draw(_renderContext);
-            _hero.Draw(_renderContext);
-            _enemy.Draw(_renderContext);
-            spriteBatch.End();
-
-            graphics.GraphicsDevice.BlendState = BlendState.Opaque;
-            graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            graphics.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+            SceneManager.Draw();
 
             base.Draw(gameTime);
         }
