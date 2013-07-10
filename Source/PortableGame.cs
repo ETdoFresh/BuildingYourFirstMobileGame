@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Source.Game2D;
+using Source.Game3D;
 
 namespace Source
 {
@@ -17,8 +18,8 @@ namespace Source
         SpriteBatch _spriteBatch;
 
         RenderContext _renderContext;
-        Model _hero;
-        Matrix _view, _projection;
+        GameModel _hero;
+        Camera _camera;
 
         GameSprite _background;
 
@@ -42,8 +43,14 @@ namespace Source
             // TODO: Add your initialization logic here
             _renderContext = new RenderContext();
 
-            _view = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
-            _projection = Matrix.CreateOrthographic(800, 480, 0.1f, 300);
+            _camera = new Camera();
+            _camera.Position = new Vector3(0, 0, 20);
+            _renderContext.Camera = _camera;
+
+            _hero = new GameModel("Game3D/Vampire");
+            _hero.Position = new Vector3(0, -147, -100);
+
+            _background = new GameSprite("Game2D/Background");
         }
 
         /// <summary>
@@ -59,9 +66,7 @@ namespace Source
             _renderContext.SpriteBatch = _spriteBatch;
             _renderContext.GraphicsDevice = _graphics.GraphicsDevice;
 
-            _hero = Content.Load<Model>("Game3D/Vampire");
-
-            _background = new GameSprite("Game2D/Background");
+            _hero.LoadContent(Content);
             _background.LoadContent(Content);
         }
 
@@ -87,6 +92,8 @@ namespace Source
 
             // TODO: Add your update logic here
             _renderContext.GameTime = gameTime;
+            _camera.Update(_renderContext);
+            _hero.Update(_renderContext);
         }
 
         /// <summary>
@@ -106,22 +113,7 @@ namespace Source
             //_graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             //_graphics.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
 
-            var transforms = new Matrix[_hero.Bones.Count];
-            _hero.CopyAbsoluteBoneTransformsTo(transforms);
-
-            foreach (ModelMesh mesh in _hero.Meshes)
-            {
-                foreach (BasicEffect effect in mesh.Effects)
-                {
-                    effect.EnableDefaultLighting();
-
-                    effect.View = _view;
-                    effect.Projection = _projection;
-                    effect.World = transforms[mesh.ParentBone.Index];
-                }
-
-                mesh.Draw();
-            }
+            _hero.Draw(_renderContext);
         }
     }
 }
