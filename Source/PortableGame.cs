@@ -14,7 +14,8 @@ namespace Source
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
 
-        GameSprite _background, _enemy, _hero;
+        GameSprite _background, _enemy;
+        Hero2D _hero;
         RenderContext _renderContext;
 
         public PortableGame(Game game)
@@ -36,10 +37,10 @@ namespace Source
 
             _background = new GameSprite("Game2D/Background");
             _enemy = new GameSprite("Game2D/Enemy");
-            _hero = new GameSprite("Game2D/Hero");
+            _hero = new Hero2D();
+            _hero.Initialize();
 
             _enemy.Position = new Vector2(10, 10);
-            _hero.Position = new Vector2(10, 348);
         }
 
         /// <summary>
@@ -77,7 +78,7 @@ namespace Source
         public void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (Mouse.GetState().RightButton == ButtonState.Pressed)
+            if (Mouse.GetState().RightButton == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 _game.Exit();
 
             // TODO: Add your update logic here
