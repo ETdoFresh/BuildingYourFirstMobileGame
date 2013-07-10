@@ -39,7 +39,7 @@ namespace WindowsGL
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            _portableGame.Initialize();
+            _portableGame.Initialize(graphics);
 
             base.Initialize();
         }
