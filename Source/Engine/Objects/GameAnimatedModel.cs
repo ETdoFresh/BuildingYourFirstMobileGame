@@ -2,12 +2,13 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SkinnedModelData;
+using Source.Engine.SceneGraph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Source.Game3D
+namespace Source.Engine.Objects
 {
     class GameAnimatedModel : GameObject3D
     {

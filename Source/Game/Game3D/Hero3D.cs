@@ -1,33 +1,41 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Source.Engine;
+using Source.Engine.Objects;
+using Source.Engine.SceneGraph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Source.Game3D
+namespace Source.Game.Game3D
 {
     class Hero3D : GameObject3D
     {
-        private GameAnimatedModel _heroModel;
+        private GameAnimatedModel _hero;
         private int _direction = 1; //1 = Right / -1 = Left
         private const int Speed = 75;
+        private float _animationSpeedScale = 1;
 
         public override void Initialize()
         {
-            _heroModel = new GameAnimatedModel("Game3D/Vampire");
-            _heroModel.Position = new Vector3(0, -147, -100);
+            _hero = new GameAnimatedModel("Game3D/Vampire");
+            _hero.SetAnimationSpeed(_animationSpeedScale);
+            AddChild(_hero);
+            Translate(0, -147, -100);
+            base.Initialize();
         }
 
         public override void LoadContent(ContentManager contentManager)
         {
-            _heroModel.LoadContent(contentManager);
-            _heroModel.PlayAnimation("Run");
+            base.LoadContent(contentManager);
+            _hero.PlayAnimation("Run");
         }
 
         public override void Update(RenderContext renderContext)
         {
-            var heroPos = _heroModel.Position;
+            base.Update(renderContext);
+            var heroPos = WorldPosition;
             var projVec = renderContext.GraphicsDevice.Viewport.Project(heroPos, renderContext.Camera.Projection, renderContext.Camera.View, Matrix.Identity);
 
             if (_direction == 1 && projVec.X >= renderContext.GraphicsDevice.Viewport.Width)
@@ -41,16 +49,8 @@ namespace Source.Game3D
             }
 
             heroPos += Vector3.Right * (float)(Speed * renderContext.GameTime.ElapsedGameTime.TotalSeconds * _direction);
-            _heroModel.Position = heroPos;
-            _heroModel.Rotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(90 * _direction), 0, 0);
-
-            _heroModel.Update(renderContext);
+            Translate(heroPos);
+            Rotate(0, 90 * _direction, 0);
         }
-
-        public override void Draw(RenderContext renderContext)
-        {
-            _heroModel.Draw(renderContext);
-        }
-
     }
 }

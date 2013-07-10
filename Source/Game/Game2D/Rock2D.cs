@@ -1,11 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Source.Engine;
+using Source.Engine.Objects;
+using Source.Engine.SceneGraph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Source.Game2D
+namespace Source.Game.Game2D
 {
     class Rock2D : GameObject2D
     {
@@ -24,24 +27,18 @@ namespace Source.Game2D
         public override void Initialize()
         {
             _rockSprite = new GameSprite("Game2D/Rock");
+            _rockSprite.PivotPoint = new Vector2(10, 25);
             _rockSprite.CanDraw = false;
-            _rockSprite.Initialize();
+            AddChild(_rockSprite);
 
             _explosionSprite = new GameAnimatedSprite("Game2D/Explosion_Spritesheet", 16, 50, new Point(FrameSize, FrameSize), 4);
+            _explosionSprite.PivotPoint = new Vector2(24, 40);
             _explosionSprite.CanDraw = false;
-            _explosionSprite.Scale = new Vector2(ScaleFactor, ScaleFactor);
+            _explosionSprite.Scale(new Vector2(ScaleFactor, ScaleFactor));
             CanDrop = true;
-            _explosionSprite.Initialize();
+            AddChild(_explosionSprite);
 
             base.Initialize();
-        }
-
-        public override void LoadContent(ContentManager contentManager)
-        {
-            _explosionSprite.LoadContent(contentManager);
-            _rockSprite.LoadContent(contentManager);
-
-            base.LoadContent(contentManager);
         }
 
         public void Drop(Vector2 pos)
@@ -49,7 +46,7 @@ namespace Source.Game2D
             if (CanDrop)
             {
                 CanDrop = false;
-                _rockSprite.Position = pos;
+                _rockSprite.Translate(pos);
                 _rockSprite.CanDraw = true;
                 _currentSpeed = InitialDropSpeed;
                 _isFalling = true;
@@ -58,9 +55,6 @@ namespace Source.Game2D
 
         public override void Update(RenderContext renderContext)
         {
-            _rockSprite.Update(renderContext);
-            _explosionSprite.Update(renderContext);
-
             if (CanDrop) return;
 
             if (_isFalling)
@@ -68,19 +62,17 @@ namespace Source.Game2D
                 var deltaTime = (float)renderContext.GameTime.ElapsedGameTime.TotalSeconds;
                 _currentSpeed += Gravity * deltaTime;
 
-                var rockPos = _rockSprite.Position;
+                var rockPos = _rockSprite.LocalPosition;
                 rockPos.Y += _currentSpeed * deltaTime;
-                _rockSprite.Position = rockPos;
+                _rockSprite.Translate(rockPos);
 
-                if (rockPos.Y >= 350)
+                if (rockPos.Y >= 390)
                 {
                     _isFalling = false;
                     _rockSprite.CanDraw = false;
 
                     _explosionSprite.CanDraw = true;
-                    // Update explosion position taking center of rock position and center of explosion into account
-                    // Necessary because of scale!
-                    _explosionSprite.Position = new Vector2(rockPos.X + (_rockSprite.Width / ScaleFactor) - FrameSize, rockPos.Y + (_rockSprite.Height / ScaleFactor) - FrameSize);
+                    _explosionSprite.Translate(rockPos);
                     _explosionSprite.PlayAnimation();
                 }
             }
@@ -94,14 +86,6 @@ namespace Source.Game2D
             }
 
             base.Update(renderContext);
-        }
-
-        public override void Draw(RenderContext renderContext)
-        {
-            _rockSprite.Draw(renderContext);
-            _explosionSprite.Draw(renderContext);
-
-            base.Draw(renderContext);
         }
     }
 }

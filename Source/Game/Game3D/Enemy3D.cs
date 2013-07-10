@@ -1,11 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Source.Engine;
+using Source.Engine.Objects;
+using Source.Engine.SceneGraph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Source.Game3D
+namespace Source.Game.Game3D
 {
     class Enemy3D : GameObject3D
     {
@@ -32,7 +35,7 @@ namespace Source.Game3D
             base.Initialize();
 
             _enemyModel = new GameAnimatedModel("Game3D/Enemy");
-            _enemyModel.Initialize();
+            AddChild(_enemyModel);
             _enemyModel.AnimationComplete += EnemyAnimationComplete;
 
             _rock = new Rock3D();
@@ -56,31 +59,28 @@ namespace Source.Game3D
         {
             base.LoadContent(contentManager);
 
-            _enemyModel.LoadContent(contentManager);
             _enemyModel.PlayAnimation("Fly");
             _rock.LoadContent(contentManager);
 
-            _enemyModel.Position = new Vector3(-480, 150, -100);
+            Translate(new Vector3(-480, 150, -100));
         }
 
         public override void Update(RenderContext renderContext)
         {
             base.Update(renderContext);
 
-            _enemyModel.Update(renderContext);
+            _totalAppearTime += renderContext.GameTime.ElapsedGameTime.Milliseconds;
 
             _rock.Update(renderContext);
 
-            _totalAppearTime += renderContext.GameTime.ElapsedGameTime.Milliseconds;
-
             if (_totalAppearTime >= _appearDelay)
             {
-                var enemyPos = _enemyModel.Position;
+                var enemyPos = LocalPosition;
                 enemyPos.X +=
                     (float)((Speed) * renderContext.GameTime.ElapsedGameTime.TotalSeconds) *
                     _direction;
 
-                _enemyModel.Position = enemyPos;
+                Translate(enemyPos);
 
                 var projVec = renderContext.GraphicsDevice.Viewport.Project(enemyPos, renderContext.Camera.Projection, renderContext.Camera.View, Matrix.Identity);
 
@@ -109,12 +109,11 @@ namespace Source.Game3D
             }
 
             if (!_rock.IsFalling || _rock.CanDrop)
-                _rock.Position = _enemyModel.GetBoneTransform("Rock_Position").Translation;
+                _rock.Translate(_enemyModel.GetBoneTransform("Rock_Position").Translation);
         }
 
         public override void Draw(RenderContext renderContext)
         {
-            _enemyModel.Draw(renderContext);
             _rock.Draw(renderContext);
 
             base.Draw(renderContext);

@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Source.Engine.SceneGraph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Source.Game2D
+namespace Source.Engine.Objects
 {
     class GameSprite : GameObject2D
     {
@@ -38,8 +39,8 @@ namespace Source.Game2D
         {
             if (CanDraw)
             {
-                renderContext.SpriteBatch.Draw(_texture, Position, DrawRect, Color,
-                    MathHelper.ToRadians(Rotation), Vector2.Zero, Scale, Effect, Depth);
+                renderContext.SpriteBatch.Draw(_texture, WorldPosition, DrawRect, Color,
+                    MathHelper.ToRadians(WorldRotation), Vector2.Zero, WorldScale, Effect, Depth);
                 base.Draw(renderContext);
             }
         }

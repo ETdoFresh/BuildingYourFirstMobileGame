@@ -2,8 +2,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Source.Game2D;
-using Source.Game3D;
+using Source.Engine;
+using Source.Engine.Helper;
+using Source.Engine.Objects;
+using Source.Game.Game2D;
+using Source.Game.Game3D;
 
 namespace Source
 {
@@ -12,21 +15,21 @@ namespace Source
     /// </summary>
     public class PortableGame
     {
-        Game _game;
+        Microsoft.Xna.Framework.Game _game;
         ContentManager _content;
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
 
         RenderContext _renderContext;
-        Hero3D _hero;
-        Enemy3D _enemy;
-        Camera _camera;
+        Hero2D _hero;
+        Enemy2D _enemy;
+        BaseCamera _camera;
 
         GameSprite _background;
 
         private ContentManager Content { get { return _content; } }
 
-        public PortableGame(Game game, ContentManager content, GraphicsDeviceManager graphics)
+        public PortableGame(Microsoft.Xna.Framework.Game game, ContentManager content, GraphicsDeviceManager graphics)
         {
             _game = game;
             _content = content;
@@ -44,14 +47,14 @@ namespace Source
             // TODO: Add your initialization logic here
             _renderContext = new RenderContext();
 
-            _camera = new Camera();
-            _camera.Position = new Vector3(0, 0, 20);
+            _camera = new BaseCamera();
+            _camera.LocalPosition = new Vector3(0, 0, 20);
             _renderContext.Camera = _camera;
 
-            _hero = new Hero3D();
+            _hero = new Hero2D();
             _hero.Initialize();
 
-            _enemy = new Enemy3D();
+            _enemy = new Enemy2D();
             _enemy.Initialize();
 
             _background = new GameSprite("Game2D/Background");
@@ -113,10 +116,9 @@ namespace Source
             // TODO: Add your drawing code here
             _spriteBatch.Begin();
             _background.Draw(_renderContext);
-            _spriteBatch.End();
-
             _hero.Draw(_renderContext);
             _enemy.Draw(_renderContext);
+            _spriteBatch.End();
         }
     }
 }

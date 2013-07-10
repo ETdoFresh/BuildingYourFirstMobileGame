@@ -1,14 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Source.Game3D;
+using Source.Engine.Helper;
 
-namespace Source
+namespace Source.Engine
 {
     class RenderContext
     {
         public SpriteBatch SpriteBatch { get; set; }
         public GraphicsDevice GraphicsDevice { get; set; }
         public GameTime GameTime { get; set; }
-        public Camera Camera { get; set; }
+        public BaseCamera Camera { get; set; }
     }
 }
