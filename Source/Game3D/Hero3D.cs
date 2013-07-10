@@ -9,19 +9,20 @@ namespace Source.Game3D
 {
     class Hero3D : GameObject3D
     {
-        private GameModel _heroModel;
+        private GameAnimatedModel _heroModel;
         private int _direction = 1; //1 = Right / -1 = Left
         private const int Speed = 75;
 
         public override void Initialize()
         {
-            _heroModel = new GameModel("Game3D/Vampire");
+            _heroModel = new GameAnimatedModel("Game3D/Vampire");
             _heroModel.Position = new Vector3(0, -147, -100);
         }
 
         public override void LoadContent(ContentManager contentManager)
         {
             _heroModel.LoadContent(contentManager);
+            _heroModel.PlayAnimation("Run");
         }
 
         public override void Update(RenderContext renderContext)

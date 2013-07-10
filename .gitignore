@@ -2,6 +2,10 @@ Content/Content/bin/
 Content/Content/obj/
 Content/ContentLoader/bin/
 Content/ContentLoader/obj/
+Content/SkinnedModelData/bin/
+Content/SkinnedModelData/obj/
+Content/SkinnedModelPipeline/bin/
+Content/SkinnedModelPipeline/obj/
 Source/bin/
 Source/obj/
 WindowsGL/bin/
