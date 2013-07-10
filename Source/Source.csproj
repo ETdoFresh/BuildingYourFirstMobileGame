@@ -33,6 +33,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="GameAnimatedSprite.cs" />
     <Compile Include="GameObject2D.cs" />
     <Compile Include="GameSprite.cs" />
     <Compile Include="Hero2D.cs" />
