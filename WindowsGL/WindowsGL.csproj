@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{05C1DA3E-79D2-4F1A-96F1-2E4816822085}</ProjectGuid>
+    <ProjectGuid>{A8572343-E8A7-4597-86E1-3A033F811C41}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BuildingYourFirstMobileGame</RootNamespace>
-    <AssemblyName>BuildingYourFirstMobileGame</AssemblyName>
+    <RootNamespace>WindowsGL</RootNamespace>
+    <AssemblyName>WindowsGL</AssemblyName>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -56,7 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="C:\Program Files %28x86%29\MonoGame\v3.0\Assemblies\WindowsGL\SDL.dll">
+    <Content Include="..\..\..\..\..\..\..\Program Files %28x86%29\MonoGame\v3.0\Assemblies\WindowsGL\SDL.dll">
       <Link>SDL.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -64,6 +64,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Content\ContentLoader\ContentLoader.csproj">
+      <Project>{787be501-7148-445c-918e-7f477d21641d}</Project>
+      <Name>ContentLoader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Source\Source.csproj">
+      <Project>{31ca2a30-38f3-4320-9ff2-dc6d44f8430c}</Project>
+      <Name>Source</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

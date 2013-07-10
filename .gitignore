@@ -1,2 +1,10 @@
-BuildingYourFirstMobileGame/bin/
-BuildingYourFirstMobileGame/obj/
+Content/Content/bin/
+Content/Content/obj/
+Content/ContentLoader/bin/
+Content/ContentLoader/obj/
+Source/bin/
+Source/obj/
+WindowsGL/bin/
+WindowsGL/obj/
+
+*.cache*

@@ -7,9 +7,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Storage;
 using Microsoft.Xna.Framework.GamerServices;
+using Source;
 #endregion
 
-namespace BuildingYourFirstMobileGame
+namespace WindowsGL
 {
     /// <summary>
     /// This is the main type for your game
@@ -18,12 +19,15 @@ namespace BuildingYourFirstMobileGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        PortableGame _portableGame;
 
         public Game1()
             : base()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            _portableGame = new PortableGame(this);
         }
 
         /// <summary>
@@ -35,6 +39,7 @@ namespace BuildingYourFirstMobileGame
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            _portableGame.Initialize();
 
             base.Initialize();
         }
@@ -49,6 +54,7 @@ namespace BuildingYourFirstMobileGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            _portableGame.LoadContent(Content);
         }
 
         /// <summary>
@@ -58,6 +64,7 @@ namespace BuildingYourFirstMobileGame
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
+            _portableGame.UnloadContent();
         }
 
         /// <summary>
@@ -67,10 +74,8 @@ namespace BuildingYourFirstMobileGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
-
             // TODO: Add your update logic here
+            _portableGame.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -84,6 +89,7 @@ namespace BuildingYourFirstMobileGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _portableGame.Draw(gameTime);
 
             base.Draw(gameTime);
         }
