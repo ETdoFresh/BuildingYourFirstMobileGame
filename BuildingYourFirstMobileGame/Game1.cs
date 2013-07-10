@@ -47,8 +47,9 @@ namespace BuildingYourFirstMobileGame
             SceneManager.AddGameScene(new Game3D());
             SceneManager.AddGameScene(new GameCollision2D());
             SceneManager.AddGameScene(new GameCollision3D());
+            SceneManager.AddGameScene(new MenuScene());
 
-            SceneManager.SetActiveScene("GameCollision2D");
+            SceneManager.SetActiveScene("Menu");
             SceneManager.Initialize();
 
             base.Initialize();
@@ -85,8 +86,11 @@ namespace BuildingYourFirstMobileGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || InputHelper.isKeyPressed(Keys.Escape) || InputHelper.IsMousePressed(InputHelper.MouseButton.Right))
+            {
+                if (SceneManager.ActiveScene.SceneName == "Menu") Exit();
+                else SceneManager.SetActiveScene("Menu");
+            }
 
             // TODO: Add your update logic here
             SceneManager.Update(gameTime);

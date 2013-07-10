@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,6 +72,9 @@ namespace BuildingYourFirstMobileGame.Engine.SceneGraph
 
                 ActiveScene.Update(RenderContext);
             }
+
+            RenderContext.TouchPanelState = TouchPanel.GetState();
+            InputHelper.Update(RenderContext);
         }
 
         public static void Draw()
