@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Source.Game2D;
 
 namespace Source
 {
@@ -14,10 +15,9 @@ namespace Source
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
 
-        GameSprite _background;
-        Hero2D _hero;
-        Enemy2D _enemy;
         RenderContext _renderContext;
+        Model _hero;
+        Matrix _view, _projection;
 
         public PortableGame(Game game)
         {
@@ -36,13 +36,8 @@ namespace Source
             _renderContext = new RenderContext();
             _graphics = graphics;
 
-            _background = new GameSprite("Game2D/Background");
-            _enemy = new Enemy2D();
-            _enemy.Initialize();
-            _hero = new Hero2D();
-            _hero.Initialize();
-
-            _enemy.Position = new Vector2(10, 10);
+            _view = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
+            _projection = Matrix.CreateOrthographic(800, 480, 0.1f, 300);
         }
 
         /// <summary>
@@ -58,9 +53,7 @@ namespace Source
             _renderContext.SpriteBatch = _spriteBatch;
             _renderContext.GraphicsDevice = _graphics.GraphicsDevice;
 
-            _background.LoadContent(Content);
-            _enemy.LoadContent(Content);
-            _hero.LoadContent(Content);
+            _hero = Content.Load<Model>("Game3D/Vampire");
         }
 
         /// <summary>
@@ -85,8 +78,6 @@ namespace Source
 
             // TODO: Add your update logic here
             _renderContext.GameTime = gameTime;
-            _enemy.Update(_renderContext);
-            _hero.Update(_renderContext);
         }
 
         /// <summary>
@@ -98,11 +89,22 @@ namespace Source
             _game.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin();
-            _background.Draw(_renderContext);
-            _enemy.Draw(_renderContext);
-            _hero.Draw(_renderContext);
-            _spriteBatch.End();
+            var transforms = new Matrix[_hero.Bones.Count];
+            _hero.CopyAbsoluteBoneTransformsTo(transforms);
+
+            foreach (ModelMesh mesh in _hero.Meshes)
+            {
+                foreach (BasicEffect effect in mesh.Effects)
+                {
+                    effect.EnableDefaultLighting();
+
+                    effect.View = _view;
+                    effect.Projection = _projection;
+                    effect.World = transforms[mesh.ParentBone.Index];
+                }
+
+                mesh.Draw();
+            }
         }
     }
 }

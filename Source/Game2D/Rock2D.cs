@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Source
+namespace Source.Game2D
 {
     class Rock2D : GameObject2D
     {
