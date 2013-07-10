@@ -27,7 +27,7 @@ namespace WindowsGL
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
-            _portableGame = new PortableGame(this);
+            _portableGame = new PortableGame(this, Content, graphics);
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace WindowsGL
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            _portableGame.Initialize(graphics);
+            _portableGame.Initialize();
 
             base.Initialize();
         }
@@ -54,7 +54,7 @@ namespace WindowsGL
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            _portableGame.LoadContent(Content);
+            _portableGame.LoadContent(spriteBatch);
         }
 
         /// <summary>

@@ -12,6 +12,7 @@ namespace Source
     public class PortableGame
     {
         Game _game;
+        ContentManager _content;
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
 
@@ -19,9 +20,15 @@ namespace Source
         Model _hero;
         Matrix _view, _projection;
 
-        public PortableGame(Game game)
+        GameSprite _background;
+
+        private ContentManager Content { get { return _content; } }
+
+        public PortableGame(Game game, ContentManager content, GraphicsDeviceManager graphics)
         {
             _game = game;
+            _content = content;
+            _graphics = graphics;
         }
 
         /// <summary>
@@ -30,11 +37,10 @@ namespace Source
         /// related content.  Calling base.Initialize will enumerate through any components
         /// and initialize them as well.
         /// </summary>
-        public void Initialize(GraphicsDeviceManager graphics)
+        public void Initialize()
         {
             // TODO: Add your initialization logic here
             _renderContext = new RenderContext();
-            _graphics = graphics;
 
             _view = Matrix.CreateLookAt(new Vector3(0, 0, 20), new Vector3(0, 0, 0), Vector3.Up);
             _projection = Matrix.CreateOrthographic(800, 480, 0.1f, 300);
@@ -44,16 +50,19 @@ namespace Source
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
-        public void LoadContent(ContentManager Content)
+        public void LoadContent(SpriteBatch spriteBatch)
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            _spriteBatch = new SpriteBatch(_game.GraphicsDevice);
+            _spriteBatch = spriteBatch;
 
             // TODO: use this.Content to load your game content here         
             _renderContext.SpriteBatch = _spriteBatch;
             _renderContext.GraphicsDevice = _graphics.GraphicsDevice;
 
             _hero = Content.Load<Model>("Game3D/Vampire");
+
+            _background = new GameSprite("Game2D/Background");
+            _background.LoadContent(Content);
         }
 
         /// <summary>
@@ -89,6 +98,14 @@ namespace Source
             _game.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            _spriteBatch.Begin();
+            _background.Draw(_renderContext);
+            _spriteBatch.End();
+
+            //_graphics.GraphicsDevice.BlendState = BlendState.Opaque;
+            //_graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            //_graphics.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+
             var transforms = new Matrix[_hero.Bones.Count];
             _hero.CopyAbsoluteBoneTransformsTo(transforms);
 
