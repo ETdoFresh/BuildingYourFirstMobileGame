@@ -14,8 +14,9 @@ namespace Source
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
 
-        GameSprite _background, _enemy;
+        GameSprite _background;
         Hero2D _hero;
+        Enemy2D _enemy;
         RenderContext _renderContext;
 
         public PortableGame(Game game)
@@ -36,7 +37,8 @@ namespace Source
             _graphics = graphics;
 
             _background = new GameSprite("Game2D/Background");
-            _enemy = new GameSprite("Game2D/Enemy");
+            _enemy = new Enemy2D();
+            _enemy.Initialize();
             _hero = new Hero2D();
             _hero.Initialize();
 
