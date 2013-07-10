@@ -9,7 +9,7 @@ namespace Source.Game3D
 {
     abstract class GameObject3D
     {
-        public Vector3 Position { get; set; }
+        public virtual Vector3 Position { get; set; }
         public Quaternion Rotation { get; set; }
         public Vector3 Scale { get; set; }
         protected Matrix WorldMatrix;
