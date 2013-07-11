@@ -139,6 +139,16 @@ namespace Source.Engine.SceneGraph
             return Children.FirstOrDefault(child => child.HitTest(gameObj)) != null;
         }
 
+        public bool HitTest(Vector2 position, bool includeChildren)
+        {
+            if (BoundingRect.HasValue && BoundingRect.Value.Contains((int)position.X, (int)position.Y)) return true;
+
+            if (includeChildren)
+                return Children.FirstOrDefault(child => HitTest(position, includeChildren)) != null;
+
+            return false;
+        }
+
         public virtual void Initialize()
         {
             foreach (var chilld in Children) chilld.Initialize();

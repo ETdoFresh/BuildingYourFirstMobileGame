@@ -46,8 +46,9 @@ namespace Source
             SceneManager.AddGameScene(new Game3D());
             SceneManager.AddGameScene(new GameCollision2D());
             SceneManager.AddGameScene(new GameCollision3D());
+            SceneManager.AddGameScene(new MenuScene());
 
-            SceneManager.SetActiveScene("GameCollision3D");
+            SceneManager.SetActiveScene("Menu");
             SceneManager.Initialize();
         }
 
@@ -83,10 +84,14 @@ namespace Source
         public void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (Mouse.GetState().RightButton == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                _game.Exit();
+            if (InputHelper.IsMousePressed(InputHelper.MouseButton.Right) || InputHelper.isKeyPressed(Keys.Escape))
+            {
+                if (SceneManager.ActiveScene.SceneName == "Menu") _game.Exit();
+                else SceneManager.SetActiveScene("Menu");
+            }
 
             // TODO: Add your update logic here
+            InputHelper.Update(gameTime);
             SceneManager.Update(gameTime);
         }
 
