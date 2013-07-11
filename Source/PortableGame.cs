@@ -5,8 +5,10 @@ using Microsoft.Xna.Framework.Input;
 using Source.Engine;
 using Source.Engine.Helper;
 using Source.Engine.Objects;
+using Source.Engine.SceneGraph;
 using Source.Game.Game2D;
 using Source.Game.Game3D;
+using Source.Game.Scenes;
 
 namespace Source
 {
@@ -19,13 +21,6 @@ namespace Source
         ContentManager _content;
         GraphicsDeviceManager _graphics;
         SpriteBatch _spriteBatch;
-
-        RenderContext _renderContext;
-        Hero2D _hero;
-        Enemy2D _enemy;
-        BaseCamera _camera;
-
-        GameSprite _background;
 
         private ContentManager Content { get { return _content; } }
 
@@ -45,19 +40,13 @@ namespace Source
         public void Initialize()
         {
             // TODO: Add your initialization logic here
-            _renderContext = new RenderContext();
+            SceneManager.RenderContext.GraphicsDevice = _graphics.GraphicsDevice;
 
-            _camera = new BaseCamera();
-            _camera.LocalPosition = new Vector3(0, 0, 20);
-            _renderContext.Camera = _camera;
+            SceneManager.AddGameScene(new Game2D());
+            SceneManager.AddGameScene(new Game3D());
 
-            _hero = new Hero2D();
-            _hero.Initialize();
-
-            _enemy = new Enemy2D();
-            _enemy.Initialize();
-
-            _background = new GameSprite("Game2D/Background");
+            SceneManager.SetActiveScene("Game3D");
+            SceneManager.Initialize();
         }
 
         /// <summary>
@@ -68,14 +57,10 @@ namespace Source
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             _spriteBatch = spriteBatch;
+            SceneManager.RenderContext.SpriteBatch = spriteBatch;
 
-            // TODO: use this.Content to load your game content here         
-            _renderContext.SpriteBatch = _spriteBatch;
-            _renderContext.GraphicsDevice = _graphics.GraphicsDevice;
-
-            _hero.LoadContent(Content);
-            _enemy.LoadContent(Content);
-            _background.LoadContent(Content);
+            // TODO: use this.Content to load your game content here
+            SceneManager.LoadContent(Content);
         }
 
         /// <summary>
@@ -99,10 +84,7 @@ namespace Source
                 _game.Exit();
 
             // TODO: Add your update logic here
-            _renderContext.GameTime = gameTime;
-            _camera.Update(_renderContext);
-            _hero.Update(_renderContext);
-            _enemy.Update(_renderContext);
+            SceneManager.Update(gameTime);
         }
 
         /// <summary>
@@ -114,11 +96,7 @@ namespace Source
             _game.GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
-            _spriteBatch.Begin();
-            _background.Draw(_renderContext);
-            _hero.Draw(_renderContext);
-            _enemy.Draw(_renderContext);
-            _spriteBatch.End();
+            SceneManager.Draw();
         }
     }
 }

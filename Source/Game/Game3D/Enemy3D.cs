@@ -114,9 +114,8 @@ namespace Source.Game.Game3D
 
         public override void Draw(RenderContext renderContext)
         {
-            _rock.Draw(renderContext);
-
             base.Draw(renderContext);
+            _rock.Draw(renderContext);
         }
     }
 }

@@ -35,6 +35,20 @@ namespace Source.Engine.SceneGraph
             }
         }
 
+        private GameScene _scene;
+        public GameScene Scene
+        {
+            get
+            {
+                if (_scene != null) return _scene;
+                if (Parent != null) return Parent.Scene;
+                return null;
+            }
+
+            set { _scene = value; }
+        }
+
+
         public GameObject2D()
         {
             LocalScale = WorldScale = Vector2.One;
@@ -84,14 +98,12 @@ namespace Source.Engine.SceneGraph
 
         public virtual void Initialize()
         {
-            foreach (var chilld in Children)
-                chilld.Initialize();
+            foreach (var chilld in Children) chilld.Initialize();
         }
 
         public virtual void LoadContent(ContentManager contentManager)
         {
-            foreach (var chilld in Children)
-                chilld.LoadContent(contentManager);
+            foreach (var chilld in Children) chilld.LoadContent(contentManager);
         }
 
         public virtual void Update(RenderContext renderContext)
@@ -120,15 +132,13 @@ namespace Source.Engine.SceneGraph
             WorldPosition = new Vector2(pos.X, pos.Y);
             WorldScale = new Vector2(scale.X, scale.Y);
 
-            foreach (var chilld in Children)
-                chilld.Update(renderContext);
+            foreach (var chilld in Children) chilld.Update(renderContext);
         }
 
         public virtual void Draw(RenderContext renderContext)
         {
             if (CanDraw)
-                foreach (var chilld in Children)
-                    chilld.Draw(renderContext);
+                foreach (var chilld in Children) chilld.Draw(renderContext);
         }
     }
 }

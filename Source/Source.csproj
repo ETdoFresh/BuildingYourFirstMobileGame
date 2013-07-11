@@ -33,6 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Engine\SceneGraph\GameScene.cs" />
+    <Compile Include="Engine\SceneGraph\SceneManager.cs" />
     <Compile Include="Game\Game2D\Enemy2D.cs" />
     <Compile Include="Engine\Objects\GameAnimatedSprite.cs" />
     <Compile Include="Engine\SceneGraph\GameObject2D.cs" />
@@ -45,6 +47,8 @@
     <Compile Include="Engine\SceneGraph\GameObject3D.cs" />
     <Compile Include="Game\Game3D\Hero3D.cs" />
     <Compile Include="Game\Game3D\Rock3D.cs" />
+    <Compile Include="Game\Scenes\Game2D.cs" />
+    <Compile Include="Game\Scenes\Game3D.cs" />
     <Compile Include="PortableGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\RenderContext.cs" />

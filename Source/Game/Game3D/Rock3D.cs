@@ -108,11 +108,6 @@ namespace Source.Game.Game3D
                 renderContext.SpriteBatch.Begin();
                 _explosionSprite.Draw(renderContext);
                 renderContext.SpriteBatch.End();
-
-                //Reset Renderstate
-                renderContext.GraphicsDevice.BlendState = BlendState.Opaque;
-                renderContext.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-                renderContext.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
             }
 
             base.Draw(renderContext);
