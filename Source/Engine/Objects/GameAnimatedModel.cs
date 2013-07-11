@@ -5,6 +5,7 @@ using SkinnedModelData;
 using Source.Engine.SceneGraph;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -51,39 +52,42 @@ namespace Source.Engine.Objects
 
         public override void Draw(RenderContext renderContext)
         {
-            Matrix[] bones = null;
-            if (_animationPlayer.CurrentClip != null)
+            if (CanDraw)
             {
-                bones = _animationPlayer.GetSkinTransforms();
-            }
-
-            // Render the skinned mesh.
-            foreach (ModelMesh mesh in _model.Meshes)
-            {
-                foreach (SkinnedEffect effect in mesh.Effects)
+                Matrix[] bones = null;
+                if (_animationPlayer.CurrentClip != null)
                 {
-                    if (_animationPlayer.CurrentClip != null)
-                    {
-                        effect.SetBoneTransforms(bones);
-                    }
-                    else
-                    {
-                        effect.World = WorldMatrix;
-                    }
-
-                    effect.EnableDefaultLighting();
-
-                    effect.View = renderContext.Camera.View;
-                    effect.Projection = renderContext.Camera.Projection;
-
-                    effect.SpecularColor = new Vector3(0.25f);
-                    effect.SpecularPower = 16;
+                    bones = _animationPlayer.GetSkinTransforms();
                 }
 
-                mesh.Draw();
-            }
+                // Render the skinned mesh.
+                foreach (ModelMesh mesh in _model.Meshes)
+                {
+                    foreach (SkinnedEffect effect in mesh.Effects)
+                    {
+                        if (_animationPlayer.CurrentClip != null)
+                        {
+                            effect.SetBoneTransforms(bones);
+                        }
+                        else
+                        {
+                            effect.World = WorldMatrix;
+                        }
 
-            base.Draw(renderContext);
+                        effect.EnableDefaultLighting();
+
+                        effect.View = renderContext.Camera.View;
+                        effect.Projection = renderContext.Camera.Projection;
+
+                        effect.SpecularColor = new Vector3(0.25f);
+                        effect.SpecularPower = 16;
+                    }
+
+                    mesh.Draw();
+                }
+
+                base.Draw(renderContext);
+            }
         }
 
         public void PlayAnimation(string clipName)
@@ -93,10 +97,15 @@ namespace Source.Engine.Objects
 
         public void PlayAnimation(string clipName, bool loopAnimation)
         {
-            System.Diagnostics.Debug.Assert(_skinningData.AnimationClips.ContainsKey(clipName), string.Format("This model contains no animation with the name {0}", clipName));
+            PlayAnimation(clipName, loopAnimation, 0f);
+        }
+
+        public void PlayAnimation(string clipName, bool loopAnimation, float blendTime)
+        {
+            Debug.Assert(_skinningData.AnimationClips.ContainsKey(clipName), string.Format("This model contains no animation with the name {0}", clipName));
 
             var clip = _skinningData.AnimationClips[clipName];
-            _animationPlayer.StartClip(clip, loopAnimation);
+            _animationPlayer.StartClip(clip, loopAnimation, blendTime);
         }
 
         public void SetAnimationSpeed(float speedScale)

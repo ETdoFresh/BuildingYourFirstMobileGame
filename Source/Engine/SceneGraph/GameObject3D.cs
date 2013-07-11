@@ -199,7 +199,7 @@ namespace Source.Engine.SceneGraph
         public virtual void Draw(RenderContext renderContext)
         {
             if (CanDraw)
-                foreach (var chilld in Children) chilld.Draw(renderContext);
+                foreach (var child in Children) child.Draw(renderContext);
 
             if (CanDraw && DrawBoundingBox && BoundingBox.HasValue)
                 BoundingBox.Value.Draw(renderContext, Color.Red);

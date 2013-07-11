@@ -38,27 +38,27 @@
     <Compile Include="Engine\Objects\GameButton.cs" />
     <Compile Include="Engine\SceneGraph\GameScene.cs" />
     <Compile Include="Engine\SceneGraph\SceneManager.cs" />
-    <Compile Include="Game\Game2D\Enemy2D.cs" />
     <Compile Include="Engine\Objects\GameAnimatedSprite.cs" />
     <Compile Include="Engine\SceneGraph\GameObject2D.cs" />
     <Compile Include="Engine\Objects\GameSprite.cs" />
-    <Compile Include="Game\Game2D\Hero2D.cs" />
     <Compile Include="Engine\Helper\BaseCamera.cs" />
-    <Compile Include="Game\Game3D\Enemy3D.cs" />
     <Compile Include="Engine\Objects\GameAnimatedModel.cs" />
     <Compile Include="Engine\Objects\GameModel.cs" />
     <Compile Include="Engine\SceneGraph\GameObject3D.cs" />
-    <Compile Include="Game\Game3D\Hero3D.cs" />
-    <Compile Include="Game\Game3D\Rock3D.cs" />
-    <Compile Include="Game\Scenes\Game2D.cs" />
-    <Compile Include="Game\Scenes\Game3D.cs" />
-    <Compile Include="Game\Scenes\GameCollision2D.cs" />
-    <Compile Include="Game\Scenes\GameCollision3D.cs" />
+    <Compile Include="Game\Objects\Background.cs" />
+    <Compile Include="Game\Objects\ButtonsController.cs" />
+    <Compile Include="Game\Objects\EmptyObject3D.cs" />
+    <Compile Include="Game\Objects\Enemy.cs" />
+    <Compile Include="Game\Objects\Hero.cs" />
+    <Compile Include="Game\Objects\Path.cs" />
+    <Compile Include="Game\Objects\PerspectiveCamera.cs" />
+    <Compile Include="Game\Objects\Spikes.cs" />
+    <Compile Include="Game\Objects\SwingBall.cs" />
+    <Compile Include="Game\Scenes\LevelScene.cs" />
     <Compile Include="Game\Scenes\MenuScene.cs" />
     <Compile Include="PortableGame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Engine\RenderContext.cs" />
-    <Compile Include="Game\Game2D\Rock2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">

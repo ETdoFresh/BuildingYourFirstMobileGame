@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Source.Engine.Helper;
 using System;
 using System.Collections.Generic;
@@ -10,11 +11,10 @@ namespace Source.Engine.SceneGraph
 {
     static class SceneManager
     {
-        public static Microsoft.Xna.Framework.Game MainGame { get; set; }
+        public static PortableGame MainGame { get; set; }
         public static List<GameScene> GameScenes { get; private set; }
         public static GameScene ActiveScene { get; private set; }
         public static RenderContext RenderContext { get; private set; }
-
         private static GameScene _newActiveScene;
 
         static SceneManager()
@@ -81,6 +81,12 @@ namespace Source.Engine.SceneGraph
                 ActiveScene.Draw2D(RenderContext, false);
                 RenderContext.SpriteBatch.End();
 
+                //DRAW 3D
+                //Reset Renderstate
+                //RenderContext.GraphicsDevice.BlendState = BlendState.Opaque;
+                //RenderContext.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+                //RenderContext.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
+                MainGame.ResetRenderState();
                 ActiveScene.Draw3D(RenderContext);
 
                 //2D After 3D

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -43,7 +44,7 @@ namespace Source.Engine.Helper
 
         static public bool IsReleased()
         {
-            if (_prevMouseState.LeftButton == ButtonState.Pressed && _currentMouseState.LeftButton == ButtonState.Released)
+            if (GetMouseState() == State.Released)
                 return true;
 
             return false;

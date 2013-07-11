@@ -28,6 +28,7 @@ namespace WindowsGL
             Content.RootDirectory = "Content";
 
             _portableGame = new PortableGame(this, Content, graphics);
+            _portableGame.OnResetRenderState += SetRenderState;
         }
 
         /// <summary>
@@ -92,6 +93,13 @@ namespace WindowsGL
             _portableGame.Draw(gameTime);
 
             base.Draw(gameTime);
+        }
+
+        public void SetRenderState()
+        {
+            graphics.GraphicsDevice.BlendState = BlendState.Opaque;
+            graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
+            graphics.GraphicsDevice.SamplerStates[0] = SamplerState.LinearWrap;
         }
     }
 }

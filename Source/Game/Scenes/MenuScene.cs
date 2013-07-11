@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input.Touch;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Media;
 using Source.Engine.Objects;
 using Source.Engine.SceneGraph;
 using System;
@@ -11,56 +12,40 @@ namespace Source.Game.Scenes
 {
     class MenuScene : GameScene
     {
+        GameSprite _background;
+        GameButton _startButton;
+        GameButton _exitButton;
+        Song _backgroundMusic;
+
         public MenuScene() : base("Menu") { }
 
         public override void Initialize()
         {
-            GameButton btnGame2D = new GameButton("Buttons/Scene2DButton", true);
-            btnGame2D.Translate(TouchPanel.DisplayWidth / 2f, TouchPanel.DisplayHeight / 2f - 150);
-            btnGame2D.PivotPoint = new Vector2(62, 20);
-            btnGame2D.Scale(2, 2);
-            btnGame2D.OnClick += Game2D_OnClick;
-            AddSceneObject(btnGame2D);
+            _background = new GameSprite("Sprites/MenuBackground");
+            AddSceneObject(_background);
 
-            GameButton btnGame3D = new GameButton("Buttons/Scene3DButton", true);
-            btnGame3D.Translate(0, 50);
-            btnGame3D.PivotPoint = new Vector2(62, 20);
-            btnGame3D.OnClick += Game3D_OnClick;
-            btnGame2D.AddChild(btnGame3D);
+            _startButton = new GameButton("Sprites/StartButton", true);
+            _startButton.PivotPoint = new Vector2(162, 0);
+            _startButton.Translate(400, 150);
+            _startButton.OnClick += () => SceneManager.SetActiveScene("Level");
+            AddSceneObject(_startButton);
 
-            GameButton btnGameCollision2D = new GameButton("Buttons/Collision2DButton", true);
-            btnGameCollision2D.Translate(0, 50);
-            btnGameCollision2D.PivotPoint = new Vector2(62, 20);
-            btnGameCollision2D.OnClick += GameCollision2D_OnClick;
-            btnGame3D.AddChild(btnGameCollision2D);
-
-            GameButton btnGameCollision3D = new GameButton("Buttons/Collision3DButton", true);
-            btnGameCollision3D.Translate(0, 50);
-            btnGameCollision3D.PivotPoint = new Vector2(62, 20);
-            btnGameCollision3D.OnClick += GameCollision3D_OnClick;
-            btnGameCollision2D.AddChild(btnGameCollision3D);
+            _exitButton = new GameButton("Sprites/ExitButton", true);
+            _exitButton.PivotPoint = new Vector2(162, 0);
+            _exitButton.Translate(400, 250);
+            _exitButton.OnClick += () => SceneManager.MainGame.Exit();
+            AddSceneObject(_exitButton);
 
             base.Initialize();
         }
 
-        private void Game2D_OnClick()
+        public override void LoadContent(ContentManager contentManager)
         {
-            SceneManager.SetActiveScene("Game2D");
-        }
+            //_backgroundMusic = contentManager.Load<Song>("BackgroundMusic");
+            //MediaPlayer.IsRepeating = true;
+            //MediaPlayer.Play(_backgroundMusic);
 
-        private void Game3D_OnClick()
-        {
-            SceneManager.SetActiveScene("Game3D");
-        }
-
-        private void GameCollision2D_OnClick()
-        {
-            SceneManager.SetActiveScene("GameCollision2D");
-        }
-
-        private void GameCollision3D_OnClick()
-        {
-            SceneManager.SetActiveScene("GameCollision3D");
+            base.LoadContent(contentManager);
         }
     }
 }

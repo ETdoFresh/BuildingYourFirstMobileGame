@@ -10,5 +10,7 @@ namespace Source.Engine
         public GraphicsDevice GraphicsDevice { get; set; }
         public GameTime GameTime { get; set; }
         public BaseCamera Camera { get; set; }
+        public float GameSpeed { get; set; }
+        public float InitialGameSpeed { get; set; }
     }
 }

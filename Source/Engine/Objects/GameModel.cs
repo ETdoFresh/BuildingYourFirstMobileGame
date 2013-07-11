@@ -28,24 +28,27 @@ namespace Source.Engine.Objects
 
         public override void Draw(RenderContext renderContext)
         {
-            var transforms = new Matrix[_model.Bones.Count];
-            _model.CopyAbsoluteBoneTransformsTo(transforms);
-
-            foreach (ModelMesh mesh in _model.Meshes)
+            if (CanDraw)
             {
-                foreach (BasicEffect effect in mesh.Effects)
-                {
-                    effect.EnableDefaultLighting();
+                var transforms = new Matrix[_model.Bones.Count];
+                _model.CopyAbsoluteBoneTransformsTo(transforms);
 
-                    effect.View = renderContext.Camera.View;
-                    effect.Projection = renderContext.Camera.Projection;
-                    effect.World = transforms[mesh.ParentBone.Index] * WorldMatrix;
+                foreach (ModelMesh mesh in _model.Meshes)
+                {
+                    foreach (BasicEffect effect in mesh.Effects)
+                    {
+                        effect.EnableDefaultLighting();
+
+                        effect.View = renderContext.Camera.View;
+                        effect.Projection = renderContext.Camera.Projection;
+                        effect.World = transforms[mesh.ParentBone.Index] * WorldMatrix;
+                    }
+
+                    mesh.Draw();
                 }
 
-                mesh.Draw();
+                base.Draw(renderContext);
             }
-
-            base.Draw(renderContext);
         }
     }
 }

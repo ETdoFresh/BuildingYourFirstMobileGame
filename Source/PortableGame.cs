@@ -6,9 +6,8 @@ using Source.Engine;
 using Source.Engine.Helper;
 using Source.Engine.Objects;
 using Source.Engine.SceneGraph;
-using Source.Game.Game2D;
-using Source.Game.Game3D;
 using Source.Game.Scenes;
+using System;
 
 namespace Source
 {
@@ -29,6 +28,7 @@ namespace Source
             _game = game;
             _content = content;
             _graphics = graphics;
+            SceneManager.MainGame = this;
         }
 
         /// <summary>
@@ -42,11 +42,8 @@ namespace Source
             // TODO: Add your initialization logic here
             SceneManager.RenderContext.GraphicsDevice = _graphics.GraphicsDevice;
 
-            SceneManager.AddGameScene(new Game2D());
-            SceneManager.AddGameScene(new Game3D());
-            SceneManager.AddGameScene(new GameCollision2D());
-            SceneManager.AddGameScene(new GameCollision3D());
             SceneManager.AddGameScene(new MenuScene());
+            SceneManager.AddGameScene(new LevelScene());
 
             SceneManager.SetActiveScene("Menu");
             SceneManager.Initialize();
@@ -84,10 +81,8 @@ namespace Source
         public void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (InputHelper.IsMousePressed(InputHelper.MouseButton.Right) || InputHelper.isKeyPressed(Keys.Escape))
-            {
+            if (InputHelper.isKeyPressed(Keys.Escape))
                 Exit();
-            }
 
             // TODO: Add your update logic here
             InputHelper.Update(gameTime);
@@ -110,6 +105,13 @@ namespace Source
         {
             if (SceneManager.ActiveScene.SceneName == "Menu") _game.Exit();
             else SceneManager.SetActiveScene("Menu");
+        }
+
+        public event Action OnResetRenderState = delegate { };
+
+        public void ResetRenderState()
+        {
+            OnResetRenderState();
         }
     }
 }

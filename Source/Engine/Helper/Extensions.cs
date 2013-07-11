@@ -23,8 +23,8 @@ namespace Source.Engine.Helper
             var transformedCorners = new Vector2[corners.Length];
             Vector2.Transform(corners, ref transform, transformedCorners);
 
-            var newMin = new Vector3(float.MaxValue);
-            var newMax = new Vector3(float.MinValue);
+            var newMin = new Vector2(float.MaxValue);
+            var newMax = new Vector2(float.MinValue);
 
             foreach (var corner in transformedCorners)
             {
