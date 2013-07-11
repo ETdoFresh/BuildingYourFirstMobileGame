@@ -21,6 +21,7 @@ namespace Source.Game.Game3D
         {
             _hero = new GameAnimatedModel("Game3D/Vampire");
             _hero.SetAnimationSpeed(_animationSpeedScale);
+            _hero.CreateBoundingBox(25, 50, 25, new Vector3(0, 25, 0));
             AddChild(_hero);
             Translate(0, -147, -100);
             base.Initialize();

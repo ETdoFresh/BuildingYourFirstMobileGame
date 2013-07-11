@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Source.Engine.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,23 @@ namespace Source.Engine.SceneGraph
             set { _scene = value; }
         }
 
+        private BoundingBox? _relativeBoundingBox;
+        public BoundingBox? BoundingBox { get; protected set; }
+        private bool _drawBoundingBox;
+        public bool DrawBoundingBox
+        {
+            get
+            {
+                if (Parent != null)
+                    return Parent.DrawBoundingBox || _drawBoundingBox;
+
+                return _drawBoundingBox;
+            }
+            set
+            {
+                _drawBoundingBox = value;
+            }
+        }
 
         protected GameObject3D()
         {
@@ -58,6 +76,7 @@ namespace Source.Engine.SceneGraph
         {
             if (!Children.Contains(child))
             {
+                child.Scene = Scene;
                 child.Parent = this;
                 Children.Add(child);
             }
@@ -67,6 +86,7 @@ namespace Source.Engine.SceneGraph
         {
             if (Children.Remove(child))
             {
+                child.Scene = null;
                 child.Parent = null;
             }
         }
@@ -99,6 +119,35 @@ namespace Source.Engine.SceneGraph
         public void Rotate(float pitch, float yaw, float roll)
         {
             LocalRotation = Quaternion.CreateFromYawPitchRoll(MathHelper.ToRadians(yaw), MathHelper.ToRadians(pitch), MathHelper.ToRadians(roll));
+        }
+
+        public void CreateBoundingBox(float width, float height, float depth, Vector3 offset)
+        {
+            var max = new Vector3(width / 2.0f, height / 2.0f, depth / 2.0f);
+            var min = -max;
+
+            _relativeBoundingBox = new BoundingBox(min + offset, max + offset);
+            BoundingBox = _relativeBoundingBox;
+        }
+
+        public void CreateBoundingBox(float width, float height, float depth)
+        {
+            CreateBoundingBox(width, height, depth, Vector3.Zero);
+        }
+
+        public bool HitTest(GameObject3D gameObj)
+        {
+            //Check Other_Object Itself
+            if (gameObj.BoundingBox.HasValue && BoundingBox.HasValue)
+            {
+                if (BoundingBox.Value.Intersects(gameObj.BoundingBox.Value)) return true;
+            }
+
+            //Check this_Object and other_Object's Children
+            if (gameObj.Children.FirstOrDefault(HitTest) != null) return true;
+
+            //Check this_Object's children with other_Object
+            return Children.FirstOrDefault(child => child.HitTest(gameObj)) != null;
         }
 
         public virtual void Initialize()
@@ -142,12 +191,18 @@ namespace Source.Engine.SceneGraph
             }
 
             foreach (var chilld in Children) chilld.Update(renderContext);
+
+            if (_relativeBoundingBox.HasValue)
+                BoundingBox = _relativeBoundingBox.Value.Update(WorldMatrix);
         }
 
         public virtual void Draw(RenderContext renderContext)
         {
             if (CanDraw)
                 foreach (var chilld in Children) chilld.Draw(renderContext);
+
+            if (CanDraw && DrawBoundingBox && BoundingBox.HasValue)
+                BoundingBox.Value.Draw(renderContext, Color.Red);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Source.Engine.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,11 +50,30 @@ namespace Source.Engine.SceneGraph
         }
 
 
+        private Rectangle? _relativeBoundingRect;
+        public Rectangle? BoundingRect { get; protected set; }
+        private bool _drawBoundingRect;
+        public bool DrawBoundingRect
+        {
+            get
+            {
+                if (Parent != null)
+                    return Parent.DrawBoundingRect || _drawBoundingRect;
+
+                return _drawBoundingRect;
+            }
+            set
+            {
+                _drawBoundingRect = value;
+            }
+        }
+
         public GameObject2D()
         {
             LocalScale = WorldScale = Vector2.One;
             Children = new List<GameObject2D>();
             CanDraw = true;
+            DrawInFrontOf3D = true;
         }
 
         public void AddChild(GameObject2D child)
@@ -61,6 +81,7 @@ namespace Source.Engine.SceneGraph
             if (!Children.Contains(child))
             {
                 Children.Add(child);
+                child.Scene = Scene;
                 child.Parent = this;
             }
         }
@@ -68,7 +89,10 @@ namespace Source.Engine.SceneGraph
         public void RemoveChild(GameObject2D child)
         {
             if (Children.Remove(child))
+            {
+                child.Scene = null;
                 child.Parent = null;
+            }
         }
 
         public void Rotate(float rotation)
@@ -94,6 +118,25 @@ namespace Source.Engine.SceneGraph
         public void Scale(Vector2 scale)
         {
             LocalScale = scale;
+        }
+
+        public void CreateBoundingRect(int width, int height, Vector2 offset)
+        {
+            _relativeBoundingRect = new Rectangle(0, 0, width + (int)offset.X, height + (int)offset.Y);
+            BoundingRect = _relativeBoundingRect;
+        }
+
+        public void CreateBoundingRect(int width, int height)
+        {
+            CreateBoundingRect(width, height, Vector2.Zero);
+        }
+
+        public bool HitTest(GameObject2D gameObj)
+        {
+            if (!gameObj.BoundingRect.HasValue) return false;
+            if (BoundingRect.HasValue && BoundingRect.Value.Intersects(gameObj.BoundingRect.Value)) return true;
+
+            return Children.FirstOrDefault(child => child.HitTest(gameObj)) != null;
         }
 
         public virtual void Initialize()
@@ -133,12 +176,18 @@ namespace Source.Engine.SceneGraph
             WorldScale = new Vector2(scale.X, scale.Y);
 
             foreach (var chilld in Children) chilld.Update(renderContext);
+
+            if (_relativeBoundingRect.HasValue)
+                BoundingRect = _relativeBoundingRect.Value.Update(WorldMatrix);
         }
 
         public virtual void Draw(RenderContext renderContext)
         {
             if (CanDraw)
                 foreach (var chilld in Children) chilld.Draw(renderContext);
+
+            if (CanDraw && DrawBoundingRect && BoundingRect.HasValue)
+                BoundingRect.Value.Draw(renderContext, Color.Red);
         }
     }
 }

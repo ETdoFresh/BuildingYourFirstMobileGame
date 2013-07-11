@@ -24,6 +24,7 @@ namespace Source.Game.Game2D
             _heroSprite = new GameAnimatedSprite("Game2D/Hero_Spritesheet", 8, 80, new Point(32, 39));
             _heroSprite.Translate(18, 388);
             _heroSprite.PivotPoint = new Vector2(16, 39);
+            _heroSprite.CreateBoundingRect(32, 39, Vector2.Zero);
             AddChild(_heroSprite);
 
             base.Initialize();
@@ -42,13 +43,13 @@ namespace Source.Game.Game2D
                 _direction = -1;
                 _heroSprite.Effect = SpriteEffects.FlipHorizontally;
             }
-            else if (_direction == -1 && heroPos.X < 0)
+            else if (_direction == -1 && heroPos.X < (FrameWidth * _heroSprite.LocalScale.X))
             {
                 _direction = 1;
                 _heroSprite.Effect = SpriteEffects.None;
             }
 
-            heroPos.X += (float)(Speed * renderContext.GameTime.ElapsedGameTime.TotalSeconds * _direction);
+            heroPos.X += (float)((Speed * _heroSprite.LocalScale.X) * renderContext.GameTime.ElapsedGameTime.TotalSeconds) * _direction;
             _heroSprite.Translate(heroPos);
         }
     }
