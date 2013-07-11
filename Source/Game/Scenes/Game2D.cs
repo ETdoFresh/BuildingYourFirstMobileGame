@@ -17,7 +17,7 @@ namespace Source.Game.Scenes
         public Game2D()
             : base("Game2D")
         {
-            _background = new GameSprite("Game2D/BackGround");
+            _background = new GameSprite("Game2D/Background");
             AddSceneObject(_background);
 
             _hero = new Hero2D();

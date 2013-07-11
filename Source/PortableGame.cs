@@ -86,8 +86,7 @@ namespace Source
             // Allows the game to exit
             if (InputHelper.IsMousePressed(InputHelper.MouseButton.Right) || InputHelper.isKeyPressed(Keys.Escape))
             {
-                if (SceneManager.ActiveScene.SceneName == "Menu") _game.Exit();
-                else SceneManager.SetActiveScene("Menu");
+                Exit();
             }
 
             // TODO: Add your update logic here
@@ -105,6 +104,12 @@ namespace Source
 
             // TODO: Add your drawing code here
             SceneManager.Draw();
+        }
+
+        public void Exit()
+        {
+            if (SceneManager.ActiveScene.SceneName == "Menu") _game.Exit();
+            else SceneManager.SetActiveScene("Menu");
         }
     }
 }
